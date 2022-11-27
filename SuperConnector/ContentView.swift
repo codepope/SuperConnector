@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Alamofire
 import SWXMLHash
 
 struct ContentView: View {
@@ -25,13 +24,13 @@ struct ContentView: View {
       }
       Slider(value:$volume, in:0...20, onEditingChanged: { _ in
         Task {
-          await set(path:"netRemote.sys.audio.volume",value:Int(volume)) { xml in
-            print(xml)
-            guard let status:String=xml["fsapiResponse"]["status"].element?.text as? String else { return }
-            if status == "FS_OK" {
-              
-            }
-          }
+//          await set(path:"netRemote.sys.audio.volume",value:Int(volume)) { xml in
+//            print(xml)
+//            guard let status:String=xml["fsapiResponse"]["status"].element?.text as? String else { return }
+//            if status == "FS_OK" {
+//
+//            }
+//          }
         }
       })
       Text("SuperConnector")
@@ -42,112 +41,100 @@ struct ContentView: View {
   }
   
   func powerButtonPressed() {
-    Task {
-      await set(path:"netRemote.sys.power",value: poweronoff==0 ? 1 : 0 ) { xml in
-        print(xml)
-        guard let status:String=xml["fsapiResponse"]["status"].element?.text as? String else { return }
-        if status == "FS_OK" {
-          poweronoff = poweronoff==0 ? 1 : 0
-        }
-      }
-    }
+//    Task {
+//      await set(path:"netRemote.sys.power",value: poweronoff==0 ? 1 : 0 ) { xml in
+//        print(xml)
+//        guard let status:String=xml["fsapiResponse"]["status"].element?.text as? String else { return }
+//        if status == "FS_OK" {
+//          poweronoff = poweronoff==0 ? 1 : 0
+//        }
+//      }
+//    }
   }
   
   
   func initialiseState() {
     Task {
-      await get("netRemote.sys.power") { xml in
-        print(xml)
-        guard let status:String=xml["fsapiResponse"]["status"].element?.text as? String else { return }
+      let _ = try await sessionIdGet()
+      print(sessionid)
+      let powerxml=try await get("netRemote.sys.power")
+      var status:String=powerxml["fsapiResponse"]["status"].element?.text as? String ?? ""
+      if status == "FS_OK" {
+        poweronoff=Int(powerxml["fsapiResponse"]["value"]["u8"].element!.text) ?? 0
+        print(poweronoff)
+      }
+      let volumexml=try await get("netRemote.sys.audio.volume")
+      status=volumexml["fsapiResponse"]["status"].element?.text as? String ?? ""
+      if status == "FS_OK" {
+        volume=Double(volumexml["fsapiResponse"]["value"]["u8"].element!.text) ?? 0.0
+        print(volume)
+      }
+      let navstatusxml=try await set(path:"netRemote.nav.state",value:1)
+      status=navstatusxml["fsapiResponse"]["status"].element?.text as? String ?? ""
+      if status == "FS_OK" {
+        let presetsxml=try await listGetNext(path:"netRemote.nav.presets")
+        status=presetsxml["fsapiResponse"]["status"].element?.text as? String ?? ""
         if status == "FS_OK" {
-          guard let powervalue=xml["fsapiResponse"]["value"]["u8"].element?.text as? String else { return }
-          poweronoff = Int(powervalue) ?? 0
-          Task {
-            await get("netRemote.sys.audio.volume") { xml in
-              guard let status:String=xml["fsapiResponse"]["status"].element?.text as? String else { return }
-              if status == "FS_OK" {
-                guard let tmpvolume=xml["fsapiResponse"]["value"]["u8"].element?.text as? String else {
-                  return }
-                volume = Double(tmpvolume)!
-                Task {
-                  await set(path:"netRemote.nav.state",value:1) {
-                    xml in print(xml)
-                    Task {
-                      await listGetNext(path:"netRemote.nav.presets") { xml in
-                        print(xml)
-                      }
-                    }
-                  }
-                 
-                }
-                
-              }
-            }
-          }
+          print(presetsxml)
         }
       }
     }
   }
   
-  func sessionIdGet(action: @escaping ()-> Void)  {
+  func sessionIdGet() async throws -> (String) {
     if sessionid == "" {
       
-      let url="http://"+ipaddress+"/fsapi/CREATE_SESSION?pin=1234"
+      let url=URL(string:"http://"+ipaddress+"/fsapi/CREATE_SESSION?pin=1234")!
       
-      AF.request(url)
-        .responseData { response in
-          if let data = response.data {
-            let xml = XMLHash.parse(data)
-            if let sid = xml["fsapiResponse"]["sessionId"].element?.text {
-              sessionid=sid
-              action()
-            }
-          }
-        }
-      return
+      let (data, _) = try await URLSession.shared.data(from: url)
+      
+      //      print(String(decoding: data, as: UTF8.self))
+      
+      let xml = XMLHash.parse(data)
+
+      sessionid=xml["fsapiResponse"]["sessionId"].element!.text
+      
     }
-    action()
+    
+    return sessionid
   }
   
-  func get(_ path:String, action: @escaping (XMLIndexer)-> Void) async {
-    sessionIdGet() {
-      let url="http://"+ipaddress+"/fsapi/GET/"+path+"?pin=1234&sid="+sessionid
-      
-      AF.request(url)
-        .responseData { response in
-          if let data = response.data {
-            let xml = XMLHash.parse(data)
-            action(xml)
-          }
-        }
-    }
+  func get(_ path:String) async throws -> (XMLIndexer) {
+    let _ = try await sessionIdGet()
+
+    let url=URL(string:"http://"+ipaddress+"/fsapi/GET/"+path+"?pin=1234&sid="+sessionid)!
+
+    let (data, _) = try await URLSession.shared.data(from: url)
+ 
+    let xml=XMLHash.parse(data)
+    
+    return xml
   }
   
-  func set(path:String, value:Int, action: @escaping (XMLIndexer)-> Void) async {
-    sessionIdGet() {
-      
-      let url="http://"+ipaddress+"/fsapi/SET/\(path)?pin=1234&sid=\(sessionid)&value=\(value)"
-      
-      AF.request(url).responseData { response in
-        if let data = response.data {
-          let xml = XMLHash.parse(data)
-          action(xml)
-        }
-      }
-    }
+
+  func set(path:String, value:Int) async throws ->(XMLIndexer)  {
+    let _ = try await sessionIdGet()
+    
+    let url=URL(string:"http://"+ipaddress+"/fsapi/SET/\(path)?pin=1234&sid=\(sessionid)&value=\(value)")
+    
+    let (data, _) = try await URLSession.shared.data(from: url!)
+        
+    let xml=XMLHash.parse(data)
+
+    return xml
   }
   
-  func listGetNext(path:String, action: @escaping (XMLIndexer)->Void) async {
-    sessionIdGet() {
-      let url="http://"+ipaddress+"/fsapi/LIST_GET_NEXT/\(path)/-1?pin=1234&sid=\(sessionid)&maxItems=10"
-      print(url)
-      AF.request(url).responseData { response in
-        if let data = response.data {
-          let xml = XMLHash.parse(data)
-          action(xml)
-        }
-      }
-    }
+
+  func listGetNext(path:String) async throws -> (XMLIndexer) {
+    let _ = try await sessionIdGet()
+    
+    let url=URL(string:"http://"+ipaddress+"/fsapi/LIST_GET_NEXT/\(path)/-1?pin=1234&sid=\(sessionid)&maxItems=10")
+    
+    let (data, _) = try await URLSession.shared.data(from: url!)
+        
+    let xml=XMLHash.parse(data)
+    
+    return xml
   }
 }
 
