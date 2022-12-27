@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		226ED76929335D1D007B8F2D /* XMLCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 226ED76829335D1D007B8F2D /* XMLCoder */; };
+		226ED76C2943E81C007B8F2D /* SWXMLHash in Frameworks */ = {isa = PBXBuildFile; productRef = 226ED76B2943E81C007B8F2D /* SWXMLHash */; };
 		227BFEE2292D6622009E65CC /* SuperConnectorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227BFEE1292D6622009E65CC /* SuperConnectorApp.swift */; };
 		227BFEE4292D6622009E65CC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227BFEE3292D6622009E65CC /* ContentView.swift */; };
 		227BFEE6292D6622009E65CC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 227BFEE5292D6622009E65CC /* Assets.xcassets */; };
 		227BFEE9292D6622009E65CC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 227BFEE8292D6622009E65CC /* Preview Assets.xcassets */; };
 		227BFEF0292D6EDC009E65CC /* ParseXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227BFEEF292D6EDC009E65CC /* ParseXML.swift */; };
-		227BFEF3292D7181009E65CC /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 227BFEF2292D7181009E65CC /* Alamofire */; };
-		227BFEF6292D7450009E65CC /* SWXMLHash in Frameworks */ = {isa = PBXBuildFile; productRef = 227BFEF5292D7450009E65CC /* SWXMLHash */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,8 +30,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				227BFEF6292D7450009E65CC /* SWXMLHash in Frameworks */,
-				227BFEF3292D7181009E65CC /* Alamofire in Frameworks */,
+				226ED76C2943E81C007B8F2D /* SWXMLHash in Frameworks */,
+				226ED76929335D1D007B8F2D /* XMLCoder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,8 +91,8 @@
 			);
 			name = SuperConnector;
 			packageProductDependencies = (
-				227BFEF2292D7181009E65CC /* Alamofire */,
-				227BFEF5292D7450009E65CC /* SWXMLHash */,
+				226ED76829335D1D007B8F2D /* XMLCoder */,
+				226ED76B2943E81C007B8F2D /* SWXMLHash */,
 			);
 			productName = SuperConnector;
 			productReference = 227BFEDE292D6622009E65CC /* SuperConnector.app */;
@@ -123,8 +123,8 @@
 			);
 			mainGroup = 227BFED5292D6622009E65CC;
 			packageReferences = (
-				227BFEF1292D7181009E65CC /* XCRemoteSwiftPackageReference "Alamofire" */,
-				227BFEF4292D7450009E65CC /* XCRemoteSwiftPackageReference "SWXMLHash" */,
+				226ED76729335D1D007B8F2D /* XCRemoteSwiftPackageReference "XMLCoder" */,
+				226ED76A2943E81C007B8F2D /* XCRemoteSwiftPackageReference "SWXMLHash" */,
 			);
 			productRefGroup = 227BFEDF292D6622009E65CC /* Products */;
 			projectDirPath = "";
@@ -357,33 +357,33 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		227BFEF1292D7181009E65CC /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+		226ED76729335D1D007B8F2D /* XCRemoteSwiftPackageReference "XMLCoder" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			repositoryURL = "https://github.com/CoreOffice/XMLCoder.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
+				minimumVersion = 0.9.0;
 			};
 		};
-		227BFEF4292D7450009E65CC /* XCRemoteSwiftPackageReference "SWXMLHash" */ = {
+		226ED76A2943E81C007B8F2D /* XCRemoteSwiftPackageReference "SWXMLHash" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/drmohundro/SWXMLHash.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 7.0.0;
+				branch = main;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		227BFEF2292D7181009E65CC /* Alamofire */ = {
+		226ED76829335D1D007B8F2D /* XMLCoder */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 227BFEF1292D7181009E65CC /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
+			package = 226ED76729335D1D007B8F2D /* XCRemoteSwiftPackageReference "XMLCoder" */;
+			productName = XMLCoder;
 		};
-		227BFEF5292D7450009E65CC /* SWXMLHash */ = {
+		226ED76B2943E81C007B8F2D /* SWXMLHash */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 227BFEF4292D7450009E65CC /* XCRemoteSwiftPackageReference "SWXMLHash" */;
+			package = 226ED76A2943E81C007B8F2D /* XCRemoteSwiftPackageReference "SWXMLHash" */;
 			productName = SWXMLHash;
 		};
 /* End XCSwiftPackageProductDependency section */
