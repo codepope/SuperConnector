@@ -11,7 +11,8 @@ import SWXMLHash
 struct ContentView: View {
   @Environment(\.scenePhase) var scenePhase
 
-  var ipaddress="192.168.111.55"
+  
+  var superDiscovery=ServiceDiscovery()
   
   struct Preset: Hashable {
     let key: Int
@@ -24,6 +25,8 @@ struct ContentView: View {
   @State private var presets: Array<Preset> = []
   @State private var displayLine="SuperConnector"
   
+  @State private var ipaddress=""
+
   var body: some View {
     VStack {
       HStack {
@@ -104,9 +107,16 @@ struct ContentView: View {
     }
   }
   
+  func setIpaddress(address: String) {
+    ipaddress=address
+  }
   
   func initialiseState() {
     Task {
+      while(superDiscovery.address=="") {
+        sleep(1)
+      }
+      setIpaddress(address:superDiscovery.address)
       let _ = try await sessionIdGet()
       print(sessionid)
       let powerxml=try await get("netRemote.sys.power")
@@ -151,7 +161,7 @@ struct ContentView: View {
       
       let (data, _) = try await URLSession.shared.data(from: url)
       
-      //      print(String(decoding: data, as: UTF8.self))
+      print(String(decoding: data, as: UTF8.self))
       
       let xml = XMLHash.parse(data)
       
