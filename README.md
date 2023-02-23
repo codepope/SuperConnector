@@ -8,9 +8,16 @@ A simple controller for Revo SuperConnect (and other DAB radios).
 
 ## Still ToDo
 
-Preference pane to select the IP address of the DAB Radio.
+~Preference pane to select the IP address of the DAB Radio.~
 
-Peresist selected IP address?
+~Peresist selected IP address?~
 
-Scan local subnet?
+~Scan local subnet?~ 
+
+- Added simple SSDP discovery - discovers one radio.
+
+More todo 
+
+* improve startup feedback (Splash screen while discovering?)
+* fix double preset handling
 
