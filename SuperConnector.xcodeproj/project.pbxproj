@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		220C76C329A757D1005D9DF2 /* SSDPClient in Frameworks */ = {isa = PBXBuildFile; productRef = 220C76C229A757D1005D9DF2 /* SSDPClient */; };
+		220C76C529A758B8005D9DF2 /* SuperDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220C76C429A758B8005D9DF2 /* SuperDiscovery.swift */; };
 		226ED76929335D1D007B8F2D /* XMLCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 226ED76829335D1D007B8F2D /* XMLCoder */; };
 		226ED76C2943E81C007B8F2D /* SWXMLHash in Frameworks */ = {isa = PBXBuildFile; productRef = 226ED76B2943E81C007B8F2D /* SWXMLHash */; };
 		227BFEE2292D6622009E65CC /* SuperConnectorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227BFEE1292D6622009E65CC /* SuperConnectorApp.swift */; };
@@ -17,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		220C76C429A758B8005D9DF2 /* SuperDiscovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperDiscovery.swift; sourceTree = "<group>"; };
 		227BFEDE292D6622009E65CC /* SuperConnector.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SuperConnector.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		227BFEE1292D6622009E65CC /* SuperConnectorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperConnectorApp.swift; sourceTree = "<group>"; };
 		227BFEE3292D6622009E65CC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -30,6 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				220C76C329A757D1005D9DF2 /* SSDPClient in Frameworks */,
 				226ED76C2943E81C007B8F2D /* SWXMLHash in Frameworks */,
 				226ED76929335D1D007B8F2D /* XMLCoder in Frameworks */,
 			);
@@ -62,6 +66,7 @@
 				227BFEE5292D6622009E65CC /* Assets.xcassets */,
 				227BFEE7292D6622009E65CC /* Preview Content */,
 				227BFEEF292D6EDC009E65CC /* ParseXML.swift */,
+				220C76C429A758B8005D9DF2 /* SuperDiscovery.swift */,
 			);
 			path = SuperConnector;
 			sourceTree = "<group>";
@@ -93,6 +98,7 @@
 			packageProductDependencies = (
 				226ED76829335D1D007B8F2D /* XMLCoder */,
 				226ED76B2943E81C007B8F2D /* SWXMLHash */,
+				220C76C229A757D1005D9DF2 /* SSDPClient */,
 			);
 			productName = SuperConnector;
 			productReference = 227BFEDE292D6622009E65CC /* SuperConnector.app */;
@@ -125,6 +131,7 @@
 			packageReferences = (
 				226ED76729335D1D007B8F2D /* XCRemoteSwiftPackageReference "XMLCoder" */,
 				226ED76A2943E81C007B8F2D /* XCRemoteSwiftPackageReference "SWXMLHash" */,
+				220C76C129A757D1005D9DF2 /* XCRemoteSwiftPackageReference "SSDPClient" */,
 			);
 			productRefGroup = 227BFEDF292D6622009E65CC /* Products */;
 			projectDirPath = "";
@@ -154,6 +161,7 @@
 			files = (
 				227BFEF0292D6EDC009E65CC /* ParseXML.swift in Sources */,
 				227BFEE4292D6622009E65CC /* ContentView.swift in Sources */,
+				220C76C529A758B8005D9DF2 /* SuperDiscovery.swift in Sources */,
 				227BFEE2292D6622009E65CC /* SuperConnectorApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -357,6 +365,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		220C76C129A757D1005D9DF2 /* XCRemoteSwiftPackageReference "SSDPClient" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pierrickrouxel/SSDPClient.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		226ED76729335D1D007B8F2D /* XCRemoteSwiftPackageReference "XMLCoder" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/CoreOffice/XMLCoder.git";
@@ -376,6 +392,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		220C76C229A757D1005D9DF2 /* SSDPClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 220C76C129A757D1005D9DF2 /* XCRemoteSwiftPackageReference "SSDPClient" */;
+			productName = SSDPClient;
+		};
 		226ED76829335D1D007B8F2D /* XMLCoder */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 226ED76729335D1D007B8F2D /* XCRemoteSwiftPackageReference "XMLCoder" */;
