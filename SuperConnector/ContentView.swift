@@ -10,7 +10,7 @@ import SWXMLHash
 
 struct ContentView: View {
   @Environment(\.scenePhase) var scenePhase
-
+  
   
   var superDiscovery=ServiceDiscovery()
   
@@ -26,12 +26,13 @@ struct ContentView: View {
   @State private var displayLine="SuperConnector"
   
   @State private var ipaddress=""
+  @State var firstAppear: Bool = true
 
   var body: some View {
     VStack {
       HStack {
         Button() {
-           powerButtonPressed()
+          powerButtonPressed()
         } label: {
           Image(systemName: poweronoff == 0 ? "radio" : "radio.fill" ).resizable().scaledToFill().frame(maxWidth: .infinity,maxHeight: .infinity)
         }.buttonStyle(.bordered)
@@ -40,10 +41,10 @@ struct ContentView: View {
         Task {
           let xml=try await set("netRemote.sys.audio.volume",value:Int(volume))
           guard let status:String=xml["fsapiResponse"]["status"].element?.text as? String else { return }
-                      if status == "FS_OK" {
-                          print(xml)
-                      }
-                    }
+          if status == "FS_OK" {
+            //print(xml)
+          }
+        }
       })
       Text(displayLine)
       List {
@@ -58,14 +59,12 @@ struct ContentView: View {
       }
     }.onChange(of: scenePhase) { newPhase in
       if newPhase == .active {
-          initialiseState()
+        initialiseState()
       } else if newPhase == .inactive {
-          print("Inactive")
+        print("Inactive")
       } else if newPhase == .background {
-          print("Background")
+        print("Background")
       }
-  }.onAppear {
-      initialiseState()
     }
     .padding()
   }
@@ -75,8 +74,8 @@ struct ContentView: View {
       let navstatusxml=try await set("netRemote.nav.state",value:1)
       let status=navstatusxml["fsapiResponse"]["status"].element?.text as? String ?? ""
       if status == "FS_OK" {
-        let xml=try await set("netRemote.nav.action.selectPreset",value:presetNum)
-        print(xml)
+        let _ = try await set("netRemote.nav.action.selectPreset",value:presetNum)
+        //print(xml)
         getCurrentSelection()
       }
     }
@@ -86,7 +85,7 @@ struct ContentView: View {
     Task {
       sleep(1)
       let namexml=try await get("netRemote.play.info.name")
-      print(namexml)
+      //print(namexml)
       let status=namexml["fsapiResponse"]["status"].element?.text as? String ?? ""
       if status == "FS_OK" {
         let name=namexml["fsapiResponse"]["value"]["c8_array"].element?.text as? String ?? ""
@@ -98,7 +97,7 @@ struct ContentView: View {
   func powerButtonPressed() {
     Task {
       let xml=try await set("netRemote.sys.power",value: poweronoff==0 ? 1 : 0 )
-      print(xml)
+      //print(xml)
       guard let status:String=xml["fsapiResponse"]["status"].element?.text as? String else { return }
       if status == "FS_OK" {
         poweronoff = poweronoff==0 ? 1 : 0
@@ -113,23 +112,23 @@ struct ContentView: View {
   
   func initialiseState() {
     Task {
+      //print("In Initialise State")
       while(superDiscovery.address=="") {
         sleep(1)
       }
       setIpaddress(address:superDiscovery.address)
       let _ = try await sessionIdGet()
-      print(sessionid)
       let powerxml=try await get("netRemote.sys.power")
       var status:String=powerxml["fsapiResponse"]["status"].element?.text as? String ?? ""
       if status == "FS_OK" {
         poweronoff=Int(powerxml["fsapiResponse"]["value"]["u8"].element!.text) ?? 0
-        print(poweronoff)
+        //print(poweronoff)
       }
       let volumexml=try await get("netRemote.sys.audio.volume")
       status=volumexml["fsapiResponse"]["status"].element?.text as? String ?? ""
       if status == "FS_OK" {
         volume=Double(volumexml["fsapiResponse"]["value"]["u8"].element!.text) ?? 0.0
-        print(volume)
+        //print(volume)
       }
       let navstatusxml=try await set("netRemote.nav.state",value:1)
       status=navstatusxml["fsapiResponse"]["status"].element?.text as? String ?? ""
@@ -147,21 +146,20 @@ struct ContentView: View {
             }
           }
           getCurrentSelection()
-          
         }
       }
     }
   }
-
+  
   
   func sessionIdGet() async throws -> (String) {
-    if sessionid == "" {
+    while sessionid == "" {
       
       let url=URL(string:"http://"+ipaddress+"/fsapi/CREATE_SESSION?pin=1234")!
       
       let (data, _) = try await URLSession.shared.data(from: url)
       
-      print(String(decoding: data, as: UTF8.self))
+      //print(String(decoding: data, as: UTF8.self))
       
       let xml = XMLHash.parse(data)
       
@@ -174,7 +172,7 @@ struct ContentView: View {
   
   func get(_ path:String) async throws -> (XMLIndexer) {
     let _ = try await sessionIdGet()
-    
+    //print("Getting ",path)
     let url=URL(string:"http://"+ipaddress+"/fsapi/GET/"+path+"?pin=1234&sid="+sessionid)!
     
     let (data, _) = try await URLSession.shared.data(from: url)

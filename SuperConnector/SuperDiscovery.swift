@@ -22,7 +22,7 @@ class ServiceDiscovery: SSDPDiscoveryDelegate {
   func ssdpDiscovery(_: SSDPDiscovery, didDiscoverService: SSDPService) {
     if didDiscoverService.searchTarget=="urn:schemas-frontier-silicon-com:undok:fsapi:1" {
       address=didDiscoverService.host
-      print("Found ",didDiscoverService.host)
+      //print("Found ",didDiscoverService.host)
       client.stop()
     }
   }
