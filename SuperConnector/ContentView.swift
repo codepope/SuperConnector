@@ -64,8 +64,13 @@ struct ContentView: View {
         print("Inactive")
       } else if newPhase == .background {
         print("Background")
+      } else {
+        print(newPhase)
       }
-    }
+    }//.onAppear() {
+    //  initialiseState()
+    //}
+    
     .padding()
   }
   
