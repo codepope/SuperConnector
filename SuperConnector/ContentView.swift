@@ -23,7 +23,7 @@ struct ContentView: View {
   @State private var poweronoff=0
   @State private var volume: Double = 0
   @State private var presets: Array<Preset> = []
-  @State private var displayLine="SuperConnector"
+  @State private var displayLine="Searching"
   
   @State private var ipaddress=""
   @State var firstAppear: Bool = true
@@ -35,7 +35,7 @@ struct ContentView: View {
           powerButtonPressed()
         } label: {
           Image(systemName: poweronoff == 0 ? "radio" : "radio.fill" ).resizable().scaledToFill().frame(maxWidth: .infinity,maxHeight: .infinity)
-        }.buttonStyle(.bordered)
+        }.buttonStyle(.bordered).disabled(firstAppear)
       }
       Slider(value:$volume, in:0...20, onEditingChanged: { _ in
         Task {
@@ -45,7 +45,7 @@ struct ContentView: View {
             //print(xml)
           }
         }
-      })
+      }).disabled(firstAppear)
       Text(displayLine)
       List {
         ForEach(presets, id:\.key) { preset in
@@ -122,6 +122,7 @@ struct ContentView: View {
         sleep(1)
       }
       setIpaddress(address:superDiscovery.address)
+      firstAppear=false;
       let _ = try await sessionIdGet()
       let powerxml=try await get("netRemote.sys.power")
       var status:String=powerxml["fsapiResponse"]["status"].element?.text as? String ?? ""
