@@ -10,8 +10,8 @@ import SWXMLHash
 
 struct ContentView: View {
   @Environment(\.scenePhase) var scenePhase
-  
-  
+  @Environment(\.horizontalSizeClass) var horizontalSizeClass
+
   var superDiscovery=ServiceDiscovery()
   
   struct Preset: Hashable {
@@ -29,13 +29,35 @@ struct ContentView: View {
   @State var firstAppear: Bool = true
 
   var body: some View {
+      let layout = horizontalSizeClass == .regular ? AnyLayout(HStackLayout()) : AnyLayout(VStackLayout())
+
     VStack {
-      HStack {
+      layout {
         Button() {
           powerButtonPressed()
         } label: {
-          Image(systemName: poweronoff == 0 ? "radio" : "radio.fill" ).resizable().scaledToFill().frame(maxWidth: .infinity,maxHeight: .infinity)
+          Image(systemName: poweronoff == 0 ? "radio" : "radio.fill" ).resizable()
         }.buttonStyle(.bordered).disabled(firstAppear)
+          List {
+            ForEach(presets, id:\.key) { preset in
+              Button(action: {
+                selectPreset(presetNum: preset.key)
+              }
+              ) {
+                Text(preset.name).frame(maxWidth:.infinity)
+              }.buttonStyle(.borderedProminent)
+            }
+          }
+      }.onChange(of: scenePhase) { newPhase in
+          if newPhase == .active {
+            initialiseState()
+          } else if newPhase == .inactive {
+            print("Inactive")
+          } else if newPhase == .background {
+            print("Background")
+          } else {
+            print(newPhase)
+          }
       }
       Slider(value:$volume, in:0...20, onEditingChanged: { _ in
         Task {
@@ -47,29 +69,7 @@ struct ContentView: View {
         }
       }).disabled(firstAppear)
       Text(displayLine)
-      List {
-        ForEach(presets, id:\.key) { preset in
-          Button(action: {
-            selectPreset(presetNum: preset.key)
-          }
-          ) {
-            Text(preset.name).frame(maxWidth:.infinity)
-          }.buttonStyle(.borderedProminent)
-        }
-      }
-    }.onChange(of: scenePhase) { newPhase in
-      if newPhase == .active {
-        initialiseState()
-      } else if newPhase == .inactive {
-        print("Inactive")
-      } else if newPhase == .background {
-        print("Background")
-      } else {
-        print(newPhase)
-      }
-    }//.onAppear() {
-    //  initialiseState()
-    //}
+    }
     
     .padding()
   }
