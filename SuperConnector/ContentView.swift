@@ -11,7 +11,8 @@ import SWXMLHash
 struct ContentView: View {
   @Environment(\.scenePhase) var scenePhase
   @Environment(\.horizontalSizeClass) var horizontalSizeClass
-
+  @AppStorage("lastfoundip") var lastfoundip=""
+    
   var superDiscovery=ServiceDiscovery()
   
   struct Preset: Hashable {
@@ -117,11 +118,13 @@ struct ContentView: View {
   
   func initialiseState() {
     Task {
-      //print("In Initialise State")
-      while(superDiscovery.address=="") {
-        sleep(1)
-      }
-      setIpaddress(address:superDiscovery.address)
+        if lastfoundip=="" {
+            while(superDiscovery.address=="") {
+                sleep(1)
+            }
+            lastfoundip=superDiscovery.address
+        }
+      setIpaddress(address:lastfoundip)
       firstAppear=false;
       let _ = try await sessionIdGet()
       let powerxml=try await get("netRemote.sys.power")
